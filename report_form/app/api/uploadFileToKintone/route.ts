@@ -15,10 +15,11 @@ export async function POST(req: NextRequest) {
 
   try {
     const arrayBuffer = await file.arrayBuffer();
+    const base64String = Buffer.from(arrayBuffer).toString('base64');
     const response = await kintoneClient.file.uploadFile({
       file: {
         name: file.name,
-        data: Buffer.from(arrayBuffer),
+        data: Buffer.from(base64String, 'base64'),
       }
     });
     return NextResponse.json(response);

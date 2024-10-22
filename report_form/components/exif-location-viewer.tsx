@@ -152,7 +152,7 @@ export function ExifLocationViewer() {
   }, [location, title, comment, preview, name])
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-md mx-auto playful-element">
       <CardHeader>
         <CardTitle className="text-center">つるが空き家探検 報告フォーム</CardTitle>
       </CardHeader>
@@ -178,9 +178,9 @@ export function ExifLocationViewer() {
             onChange={(e) => setComment(e.target.value)}
             className="w-full p-2 border rounded"
           />
-          <Button variant="outline" className="w-full">
+          <Button variant="outline" className="w-full playful-element">
             <label htmlFor="file-upload" className="cursor-pointer flex items-center justify-center w-full">
-              <Upload className="mr-2 h-4 w-4" />
+              <Upload className="mr-2 h-4 w-4 child-friendly-icon" />
               写真をアップロード
             </label>
           </Button>
@@ -196,7 +196,7 @@ export function ExifLocationViewer() {
             <>
               <hr className="w-full border-gray-300" />
               <div className="flex items-center">
-                <MapPin className="h-6 w-6" />
+                <MapPin className="h-6 w-6 child-friendly-icon" />
                 <p>投稿のプレビュー</p>
               </div>
             </>
@@ -206,7 +206,7 @@ export function ExifLocationViewer() {
           ) : (
             <div className="w-full h-64 mt-4 hidden" id="mapPreview" ref={mapRef} style={{ height: '800px' }}></div>
           )}
-          <Button onClick={handleSubmit} className="w-full">送信</Button>
+          <Button onClick={handleSubmit} className="w-full playful-element">送信</Button>
         </div>
       </CardContent>
     </Card>

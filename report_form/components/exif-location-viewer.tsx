@@ -193,10 +193,13 @@ export function ExifLocationViewer() {
           />
           {error && <p className="text-red-500">{error}</p>}
           {location && (
-            <div className="flex items-center">
-              <MapPin className="h-6 w-6" />
-              <p>投稿のプレビュー</p>
-            </div>
+            <>
+              <hr className="w-full border-gray-300" />
+              <div className="flex items-center">
+                <MapPin className="h-6 w-6" />
+                <p>投稿のプレビュー</p>
+              </div>
+            </>
           )}
           {location ? (
             <div className="w-full h-64 mt-4" id="mapPreview" ref={mapRef} style={{ height: '800px' }}></div>

@@ -71,6 +71,7 @@ export function ExifLocationViewer() {
     return Number(dd.toFixed(6))
   }
 
+
   const handleSubmit = async () => {
     if (!file || !location) {
       setError("全てのフィールドを入力し、写真をアップロードしてください。")
@@ -86,16 +87,29 @@ export function ExifLocationViewer() {
     formData.append("file", file)
 
     try {
-      const response = await fetch("https://your-kintone-api-endpoint", {
-        method: "POST",
+      const response = await fetch('/api/uploadFileToKintone', {
+        method: 'POST',
         body: formData,
-      })
-
+      });
+  
       if (!response.ok) {
-        throw new Error("送信に失敗しました。")
+        throw new Error("画像のアップロードに失敗：" + response.statusText);
+      }
+  
+      const data = await response.json();
+      formData.append("fileKey", data.fileKey);
+
+      const recordResponse = await fetch('/api/createRecord', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!recordResponse.ok) {
+        throw new Error("レコードの作成に失敗：" + recordResponse.statusText);
       }
 
-      alert("送信に成功しました！")
+      console.log("レコードの作成に成功", await recordResponse.json())
+
     } catch (error) {
       setError((error as Error).message)
     }

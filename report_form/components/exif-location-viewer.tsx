@@ -152,7 +152,7 @@ export function ExifLocationViewer() {
   }, [location, title, comment, preview, name])
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-md mx-auto playful-element">
       <CardHeader>
         <CardTitle className="text-center">つるが空き家探検 報告フォーム</CardTitle>
       </CardHeader>
@@ -196,7 +196,7 @@ export function ExifLocationViewer() {
             <>
               <hr className="w-full border-gray-300" />
               <div className="flex items-center">
-                <MapPin className="h-6 w-6" />
+                <MapPin className="h-6 w-6 child-friendly-icon" />
                 <p>投稿のプレビュー</p>
               </div>
             </>

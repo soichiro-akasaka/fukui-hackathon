@@ -9,15 +9,6 @@ import { Loader } from '@googlemaps/js-api-loader'
 
 // 環境変数からAPIキーを取得
 const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''
-console.log(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY)
-
-interface ExifData {
-  GPSLatitude?: number[];
-  GPSLatitudeRef?: string;
-  GPSLongitude?: number[];
-  GPSLongitudeRef?: string;
-  [key: string]: unknown; // 他のEXIFタグも含めるための汎用プロパティ
-}
 
 // Loaderのインスタンスを一度だけ作成
 const loader = new Loader({
@@ -48,22 +39,28 @@ export function ExifLocationViewer() {
     const fileURL = URL.createObjectURL(file)
     setPreview(fileURL)
 
-    EXIF.getData(file as Blob, function(this: ExifData) {
-      const lat = EXIF.getTag(this, "GPSLatitude")
-      const latRef = EXIF.getTag(this, "GPSLatitudeRef")
-      const lng = EXIF.getTag(this, "GPSLongitude")
-      const lngRef = EXIF.getTag(this, "GPSLongitudeRef")
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      const binaryStr = event.target?.result;
+      if (binaryStr) {
+        const exifData = EXIF.readFromBinaryFile(binaryStr as ArrayBuffer);
+        const lat = exifData.GPSLatitude;
+        const latRef = exifData.GPSLatitudeRef;
+        const lng = exifData.GPSLongitude;
+        const lngRef = exifData.GPSLongitudeRef;
 
-      if (lat && latRef && lng && lngRef) {
-        const latitude = convertDMSToDD(lat, latRef)
-        const longitude = convertDMSToDD(lng, lngRef)
-        setLocation({ lat: latitude, lng: longitude })
-        setError(null)
-      } else {
-        setError("位置情報が見つかりませんでした。")
-        setLocation(null)
+        if (lat && latRef && lng && lngRef) {
+          const latitude = convertDMSToDD(lat, latRef);
+          const longitude = convertDMSToDD(lng, lngRef);
+          setLocation({ lat: latitude, lng: longitude });
+          setError(null);
+        } else {
+          setError("位置情報が見つかりませんでした。");
+          setLocation(null);
+        }
       }
-    })
+    };
+    reader.readAsArrayBuffer(file);
   }
 
   const convertDMSToDD = (dms: number[], ref: string) => {

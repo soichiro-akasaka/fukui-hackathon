@@ -1,13 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { KintoneRestAPIClient } from '@kintone/rest-api-client';
-
-const kintoneClient = new KintoneRestAPIClient({
-  baseUrl: 'https://hug-luma.cybozu.com',
-  auth: {
-    username: process.env.NEXT_PUBLIC_KINTONE_USERNAME,
-    password: process.env.NEXT_PUBLIC_KINTONE_PASSWORD,
-  },
-});
 
 export async function POST(req: NextRequest) {
   const formData = await req.formData();
@@ -19,16 +10,23 @@ export async function POST(req: NextRequest) {
   const fileKey = formData.get('fileKey') as string;
 
   try {
-    const response = await kintoneClient.record.addRecord({
-      app: process.env.NEXT_PUBLIC_KINTONE_APP_ID as string,
-      record: {
-        name: { value: name },
-        title: { value: title },
-        comment: { value: comment },
-        latitude: { value: latitude },
-        longitude: { value: longitude },
-        photo: { value: [{ fileKey }] },
-      }
+    const response = await fetch('https://hug-luma.cybozu.com/k/v1/record.json', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(process.env.KINTONE_API_KEY && { 'X-Cybozu-API-Token': process.env.KINTONE_API_KEY }),
+      },
+      body: JSON.stringify({
+        app: process.env.KINTONE_APP_ID,
+        record: {
+          name: { value: name },
+          title: { value: title },
+          comment: { value: comment },
+          latitude: { value: latitude },
+          longitude: { value: longitude },
+          photo: { value: [{ fileKey }] },
+        },
+      }),
     });
     return NextResponse.json(response);
   } catch (error) {

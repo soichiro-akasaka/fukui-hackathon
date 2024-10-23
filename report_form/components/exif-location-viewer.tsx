@@ -6,6 +6,7 @@ import { Upload, MapPin } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Loader } from '@googlemaps/js-api-loader'
+import { json } from 'stream/consumers'
 
 // 環境変数からAPIキーを取得
 const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''
@@ -84,31 +85,31 @@ export function ExifLocationViewer() {
     formData.append("comment", comment)
     formData.append("latitude", location.lat.toString())
     formData.append("longitude", location.lng.toString())
-    formData.append("file", file)
+    formData.append("file", file) // ファイルをフォームデータに追加
 
     try {
+      console.log(file)
       const response = await fetch('/api/uploadFileToKintone', {
         method: 'POST',
         body: formData,
       });
-  
-      if (!response.ok) {
-        throw new Error("画像のアップロードに失敗：" + response.statusText);
-      }
-  
+      // fileKeyを取得
       const data = await response.json();
-      formData.append("fileKey", data.fileKey);
+      console.log("画像のアップロードに成功", data.fileKey)
+      formData.append("fileKey", data.fileKey)
 
-      const recordResponse = await fetch('/api/createRecord', {
+      const createRecordResponse = await fetch('/api/createRecord', {
         method: 'POST',
         body: formData,
       });
-
-      if (!recordResponse.ok) {
-        throw new Error("レコードの作成に失敗：" + recordResponse.statusText);
+  
+      if (!createRecordResponse.ok) {
+        throw new Error("レコードの作成に失敗：" + createRecordResponse.statusText);
       }
+  
+      const recordData = await createRecordResponse.json();
 
-      console.log("レコードの作成に成功", await recordResponse.json())
+      console.log("レコードの作成に成功", recordData)
 
     } catch (error) {
       setError((error as Error).message)

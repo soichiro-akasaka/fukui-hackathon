@@ -6,6 +6,7 @@ import { Upload, MapPin } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Loader } from '@googlemaps/js-api-loader'
+import { useRouter } from 'next/router'
 
 // 環境変数からAPIキーを取得
 const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''
@@ -29,6 +30,7 @@ export function ExifLocationViewer() {
   const mapRef = useRef<HTMLDivElement | null>(null)
   const mapInstance = useRef<google.maps.Map | null>(null)
   const markerInstance = useRef<google.maps.marker.AdvancedMarkerElement | null>(null)
+  const router = useRouter()
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -109,6 +111,7 @@ export function ExifLocationViewer() {
       const recordData = await createRecordResponse.json();
 
       console.log("レコードの作成に成功", recordData)
+      router.push('/completion')
 
     } catch (error) {
       setError((error as Error).message)

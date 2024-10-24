@@ -134,39 +134,46 @@ export function ExifLocationViewer() {
 
   useEffect(() => {
     if (location && mapInstance.current) {
-      const position = { lat: location.lat, lng: location.lng }
-
-      if (markerInstance.current) {
-        markerInstance.current.position = position
+      const { lat, lng } = location;
+  
+      // latとlngがNaNでないことを確認
+      if (!isNaN(lat) && !isNaN(lng)) {
+        const position = { lat, lng };
+  
+        if (markerInstance.current) {
+          markerInstance.current.position = position;
+        } else {
+          markerInstance.current = new google.maps.marker.AdvancedMarkerElement({
+            map: mapInstance.current,
+            position: position,
+            title: 'Location',
+          });
+        }
+  
+        mapInstance.current.setCenter(position);
+        mapInstance.current.setZoom(15);
+  
+        const infoWindow = new google.maps.InfoWindow({
+          content: `
+            <div style="font-family: Arial, sans-serif; padding: 10px; max-width: 200px;">
+              <p style="font-weight: bold; margin-bottom: 5px;">投稿者：${name}</p>
+              <h3 style="font-size: 16px; margin: 5px 0;">${title}</h3>
+              <p style="font-size: 14px; margin-bottom: 10px;">${comment}</p>
+              <img src="${preview}" alt="プレビュー" style="width: 100%; height: auto; border-radius: 5px;" />
+            </div>
+          `,
+        });
+  
+        infoWindow.open(mapInstance.current, markerInstance.current);
+  
+        markerInstance.current.addListener('click', () => {
+          infoWindow.open(mapInstance.current, markerInstance.current);
+        });
       } else {
-        markerInstance.current = new google.maps.marker.AdvancedMarkerElement({
-          map: mapInstance.current,
-          position: position,
-          title: 'Location',
-        })
+        console.error('Invalid latitude or longitude:', lat, lng);
       }
-
-      mapInstance.current.setCenter(position)
-      mapInstance.current.setZoom(15)
-
-      const infoWindow = new google.maps.InfoWindow({
-        content: `
-          <div style="font-family: Arial, sans-serif; padding: 10px; max-width: 200px;">
-            <p style="font-weight: bold; margin-bottom: 5px;">投稿者：${name}</p>
-            <h3 style="font-size: 16px; margin: 5px 0;">${title}</h3>
-            <p style="font-size: 14px; margin-bottom: 10px;">${comment}</p>
-            <img src="${preview}" alt="プレビュー" style="width: 100%; height: auto; border-radius: 5px;" />
-          </div>
-        `,
-      })
-
-      infoWindow.open(mapInstance.current, markerInstance.current)
-
-      markerInstance.current.addListener('click', () => {
-        infoWindow.open(mapInstance.current, markerInstance.current)
-      })
     }
-  }, [location, title, comment, preview, name])
+  }, [location, title, comment, preview, name]);
 
   return (
     <Card className="w-full max-w-md mx-auto">

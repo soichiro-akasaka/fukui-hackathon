@@ -1,14 +1,7 @@
-import { ExifLocationViewer } from "@/components/exif-location-viewer"
-import CompletionScreen from "@/components/completion-screen"
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+"use client";
+
+import { ExifLocationViewer } from "@/components/exif-location-viewer";
 
 export default function Page() {
-  return (
-    <Router>
-      <Switch>
-        <Route exact path="/" component={ExifLocationViewer} />
-        <Route path="/completion" component={CompletionScreen} />
-      </Switch>
-    </Router>
-  )
+  return <ExifLocationViewer />;
 }

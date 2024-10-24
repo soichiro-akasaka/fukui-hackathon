@@ -6,7 +6,7 @@ import { Upload, MapPin } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Loader } from '@googlemaps/js-api-loader'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 
 // 環境変数からAPIキーを取得
 const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''

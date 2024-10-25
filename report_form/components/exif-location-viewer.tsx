@@ -138,8 +138,8 @@ export function ExifLocationViewer() {
   
       // latとlngがNaNでないことを確認
       if (!isNaN(lat) && !isNaN(lng)) {
-        const position = { lat, lng };
-  
+        const position = { lat: Number(lat), lng: Number(lng) };
+        
         if (markerInstance.current) {
           markerInstance.current.position = position;
         } else {

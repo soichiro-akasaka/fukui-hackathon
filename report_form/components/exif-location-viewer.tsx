@@ -134,11 +134,12 @@ export function ExifLocationViewer() {
 
   useEffect(() => {
     if (location && mapInstance.current) {
-      const { lat, lng } = location;
+      const lat = Number(location.lat);
+      const lng = Number(location.lng);
   
       // latとlngがNaNでないことを確認
       if (!isNaN(lat) && !isNaN(lng)) {
-        const position = { lat: Number(lat), lng: Number(lng) };
+        const position = { lat, lng };
         
         if (markerInstance.current) {
           markerInstance.current.position = position;

@@ -26,6 +26,7 @@ export function ExifLocationViewer() {
   const [comment, setComment] = useState<string>("")
   const [file, setFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
   const mapRef = useRef<HTMLDivElement | null>(null)
   const mapInstance = useRef<google.maps.Map | null>(null)
@@ -80,6 +81,8 @@ export function ExifLocationViewer() {
       return
     }
 
+    setIsSubmitting(true)
+
     const formData = new FormData()
     formData.append("name", name)
     formData.append("title", title)
@@ -115,6 +118,8 @@ export function ExifLocationViewer() {
 
     } catch (error) {
       setError((error as Error).message)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -231,7 +236,9 @@ export function ExifLocationViewer() {
           ) : (
             <div className="w-full h-64 mt-4 hidden" id="mapPreview" ref={mapRef} style={{ height: '800px' }}></div>
           )}
-          <Button onClick={handleSubmit} className="w-full">送信</Button>
+          <Button onClick={handleSubmit} className="w-full" disabled={isSubmitting}>
+            {isSubmitting ? '送信中...' : '送信'}
+          </Button>
         </div>
       </CardContent>
     </Card>

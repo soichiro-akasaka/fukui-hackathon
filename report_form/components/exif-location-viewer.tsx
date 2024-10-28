@@ -24,6 +24,9 @@ export function ExifLocationViewer() {
   const [name, setName] = useState<string>("")
   const [title, setTitle] = useState<string>("")
   const [comment, setComment] = useState<string>("")
+  const [fixedName, setFixedName] = useState<string>("")
+  const [fixedTitle, setFixedTitle] = useState<string>("")
+  const [fixedComment, setFixedComment] = useState<string>("")
   const [file, setFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
@@ -31,6 +34,7 @@ export function ExifLocationViewer() {
   const mapRef = useRef<HTMLDivElement | null>(null)
   const mapInstance = useRef<google.maps.Map | null>(null)
   const markerInstance = useRef<google.maps.marker.AdvancedMarkerElement | null>(null)
+  const infoWindowInstance = useRef<google.maps.InfoWindow | null>(null) // InfoWindowのインスタンスを管理
   const router = useRouter()
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -158,8 +162,14 @@ export function ExifLocationViewer() {
   
         mapInstance.current.setCenter(position);
         mapInstance.current.setZoom(15);
-  
-        const infoWindow = new google.maps.InfoWindow({
+        
+        // 既存のInfoWindowを閉じる
+        if (infoWindowInstance.current) {
+          infoWindowInstance.current.close();
+        }
+
+        // 新しいInfoWindowを作成
+        infoWindowInstance.current = new google.maps.InfoWindow({
           content: `
             <div style="font-family: Arial, sans-serif; padding: 10px; max-width: 200px;">
               <p style="font-weight: bold; margin-bottom: 5px;">投稿者：${name}</p>
@@ -169,17 +179,12 @@ export function ExifLocationViewer() {
             </div>
           `,
         });
-  
-        infoWindow.open(mapInstance.current, markerInstance.current);
-  
-        markerInstance.current.addListener('click', () => {
-          infoWindow.open(mapInstance.current, markerInstance.current);
-        });
+        infoWindowInstance.current.open(mapInstance.current, markerInstance.current);
       } else {
         console.error('Invalid latitude or longitude:', lat, lng);
       }
     }
-  }, [location, title, comment, preview, name]);
+  }, [location, fixedName, fixedTitle, fixedComment, preview]);
 
   return (
     <Card className="w-full max-w-md mx-auto">
@@ -193,6 +198,7 @@ export function ExifLocationViewer() {
             placeholder="投稿者名"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            onBlur={(e) => setFixedName(e.target.value)}
             className="w-full p-2 border rounded"
           />
           <input
@@ -200,12 +206,14 @@ export function ExifLocationViewer() {
             placeholder="タイトル"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            onBlur={(e) => setFixedTitle(e.target.value)}
             className="w-full p-2 border rounded"
           />
           <textarea
             placeholder="コメント"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
+            onBlur={(e) => setFixedComment(e.target.value)}
             className="w-full p-2 border rounded"
           />
           <Button variant="outline" className="w-full">

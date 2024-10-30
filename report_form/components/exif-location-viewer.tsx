@@ -187,41 +187,50 @@ export function ExifLocationViewer() {
   }, [location, fixedName, fixedTitle, fixedComment, preview]);
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full mx-auto border-0 shadow-none">
       <CardHeader>
-        <CardTitle className="text-center">つるが空き家探検 報告フォーム</CardTitle>
+        <CardTitle className="text-center">つるが空き家 周辺スポット情報 登録フォーム</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col items-center space-y-4">
-          <input
-            type="text"
-            placeholder="投稿者名"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            onBlur={(e) => setFixedName(e.target.value)}
-            className="w-full p-2 border rounded"
-          />
-          <input
-            type="text"
-            placeholder="タイトル"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            onBlur={(e) => setFixedTitle(e.target.value)}
-            className="w-full p-2 border rounded"
-          />
-          <textarea
-            placeholder="コメント"
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            onBlur={(e) => setFixedComment(e.target.value)}
-            className="w-full p-2 border rounded"
-          />
-          <Button variant="outline" className="w-full">
+          <label className="w-full">
+            <span className="block text-sm font-medium text-gray-700">投稿者名</span>
+            <input
+              type="text"
+              placeholder="投稿者名"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              onBlur={(e) => setFixedName(e.target.value)}
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </label>
+          <label className="w-full">
+            <span className="block text-sm font-medium text-gray-700">タイトル</span>
+            <input
+              type="text"
+              placeholder="タイトル"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              onBlur={(e) => setFixedTitle(e.target.value)}
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </label>
+          <label className="w-full">
+            <span className="block text-sm font-medium text-gray-700">コメント</span>
+            <textarea
+              placeholder="コメント"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              onBlur={(e) => setFixedComment(e.target.value)}
+              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </label>
+            <Button variant="outline" className="w-full h-16 bg-gray-200">
             <label htmlFor="file-upload" className="cursor-pointer flex items-center justify-center w-full">
               <Upload className="mr-2 h-4 w-4" />
               写真をアップロード
             </label>
-          </Button>
+            </Button>
           <input
             id="file-upload"
             type="file"
@@ -244,9 +253,13 @@ export function ExifLocationViewer() {
           ) : (
             <div className="w-full h-64 mt-4 hidden" id="mapPreview" ref={mapRef} style={{ height: '800px' }}></div>
           )}
-          <Button onClick={handleSubmit} className="w-full" disabled={isSubmitting}>
+            <Button 
+            onClick={handleSubmit} 
+            className="w-full h-12 bg-blue-500 text-white hover:bg-blue-600" 
+            disabled={isSubmitting}
+            >
             {isSubmitting ? '送信中...' : '送信'}
-          </Button>
+            </Button>
         </div>
       </CardContent>
     </Card>

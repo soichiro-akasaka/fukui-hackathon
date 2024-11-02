@@ -187,9 +187,9 @@ export function ExifLocationViewer() {
   }, [location, fixedName, fixedTitle, fixedComment, preview]);
 
   return (
-    <Card className="w-full mx-auto border-0 shadow-none">
+    <Card className="w-full max-w-md mx-auto border-0 shadow-none">
       <CardHeader>
-        <CardTitle className="text-center">つるが空き家 周辺スポット情報 登録フォーム</CardTitle>
+        <CardTitle className="text-center">つるが市 まちオセロ</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col items-center space-y-4">
@@ -225,12 +225,12 @@ export function ExifLocationViewer() {
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </label>
-            <Button variant="outline" className="w-full h-16 bg-gray-200">
+          <Button variant="outline" className="w-full">
             <label htmlFor="file-upload" className="cursor-pointer flex items-center justify-center w-full">
               <Upload className="mr-2 h-4 w-4" />
               写真をアップロード
             </label>
-            </Button>
+          </Button>
           <input
             id="file-upload"
             type="file"
@@ -253,15 +253,15 @@ export function ExifLocationViewer() {
           ) : (
             <div className="w-full h-64 mt-4 hidden" id="mapPreview" ref={mapRef} style={{ height: '800px' }}></div>
           )}
-            <Button 
-            onClick={handleSubmit} 
-            className="w-full h-12 bg-blue-500 text-white hover:bg-blue-600" 
-            disabled={isSubmitting}
-            >
+          <Button onClick={handleSubmit} className="w-full h-12 bg-blue-500 text-white hover:bg-blue-600" disabled={isSubmitting}>
             {isSubmitting ? '送信中...' : '送信'}
-            </Button>
+          </Button>
         </div>
       </CardContent>
+      <div className="mt-4 text-center">
+        <p className="text-sm text-gray-500 mb-2">created by</p>
+        <img src="/image.png" alt="コピーライト" className="w-32 m-auto" />
+      </div>
     </Card>
   )
 }
